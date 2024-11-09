@@ -1,0 +1,14 @@
+{
+  "name": "options",
+  "version": "1.0.0",
+  "description": "fetch data from Polygon.io and creates graphs",
+  "main": "script.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "jboente",
+  "license": "ISC",
+  "dependencies": {
+    "plotly.js-dist": "^2.35.2"
+  }
+}

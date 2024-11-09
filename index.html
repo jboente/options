@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Metrics Viewer</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+    <!--Had to call it this way so I could use the library,
+    I think that when it is used as Node.js it can be imported from the index.js-->
 </head>
 <body>
     <div class="container">
@@ -20,18 +22,17 @@
         <input type="date" id="date-to">
 
         <label for="metrics">Select Metrics:</label>
-        <select id="metrics" multiple>
-            <option value="open">Open</option>
-            <option value="close">Close</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-            <option value="volume">Volume</option>
-        </select>
 
         <button id="fetch-data">Fetch Data</button>
 
-        <canvas id="stockChart"></canvas>
+        <div class="chart-container">
+            <p class="chart-text">Chart will be displayed below</p>
+            <div id="chart-canvas"></div>
+        </div>
+
+        
     </div>
-    <script src="script.js"></script>
+    
+    <script src="script.js"></script> 
 </body>
 </html>

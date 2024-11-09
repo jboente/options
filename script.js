@@ -1,4 +1,5 @@
 const fetchDataBtn = document.getElementById('fetch-data');
+const chartCanvas = document.getElementById('chart-canvas')
 
 const runFetch = () => {
     const stockCode = document.getElementById('stock-code').value;
@@ -6,35 +7,51 @@ const runFetch = () => {
     const dateFrom = document.getElementById('date-from').value;
     console.log('dateFrom ---> ', dateFrom);
     const dateTo = document.getElementById('date-to').value;
-    console.log('dateTp ---> ', dateTo);
-    const metrics = Array.from(document.getElementById('metrics').selectedOptions).map(option => option.value);
-    console.log('metrics ---> ', metrics);
+    console.log('dateTo ---> ', dateTo);
 
-    if (stockCode && dateFrom && dateTo && metrics.length > 0) {
-        fetchStockData(stockCode, dateFrom, dateTo, metrics);
+    const dateArray = generateDateArray(dateFrom, dateTo);
+
+    console.log(dateArray);
+
+    if (stockCode && dateFrom && dateTo) {
+        fetchStockData(stockCode, dateFrom, dateTo, dateArray);
     } else {
         alert('Please fill all fields and select at least one metric.');
+    };
+};
+
+function generateDateArray(startDate, endDate) {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    let dateArray = [];
+
+    while (start <= end) {
+        const dayOfWeek = start.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Sundays (0) and Saturdays (6)
+            dateArray.push(new Date(start));
+        }
+        start.setDate(start.getDate() + 1);
     }
+
+    return dateArray;
 };
 
 
-fetchDataBtn.addEventListener('click', runFetch);
-    
 
-
-async function fetchStockData(stockCode, dateFrom, dateTo, metrics) {
+async function fetchStockData(stockCode, dateFrom, dateTo, dateArray) {
     const apiKey = 'zis_z1ntNODTYesUHr68jbd5pvSXTYqY';
     const url = `https://api.polygon.io/v2/aggs/ticker/${stockCode}/range/1/day/${dateFrom}/${dateTo}?apiKey=${apiKey}`;
     console.log(url);
     try {
         const response = await fetch(url);
-        console.log(response)
+        console.log(response);
 
         const data = await response.json();
-        console.log(data)
+        console.log(data.results);
+        console.log(dateArray)
 
         if (data.results) {
-            renderChart(data.results, metrics);
+            renderChart(data.results, dateArray);
         } else {
             alert('No data found for the given stock and date range.');
         }
@@ -45,46 +62,14 @@ async function fetchStockData(stockCode, dateFrom, dateTo, metrics) {
     }
 };
 
-/* <-----------------------UNNECESSARY FOR NOW---------------------------------->
-function renderChart(data, metrics) {
-    const ctx = document.getElementById('stockChart').getContext('2d');
-    const labels = data.map(item => new Date(item.t).toLocaleDateString());
-    const datasets = metrics.map(metric => ({
-        label: metric,
-        data: data.map(item => item[metric]),
-        borderColor: getRandomColor(),
-        fill: false
-    }));
+fetchDataBtn.addEventListener('click', runFetch);
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day'
-                    }
-                },
-                y: {
-                    beginAtZero: false
-                }
-            }
-        }
-    });
-}
 
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+const renderChart = (data, dates) => {
+    console.log('inside renderChart function')
+    const openPrice = data.map((element) => element.o);
+    Plotly.newPlot( chartCanvas, [{
+        x: dates,
+        y: openPrice }], {
+        margin: { t: 0 } } );
 }
-*/
