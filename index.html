@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Metrics Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Metrics Viewer</h1>
+        <label for="stock-code">Stock Code:</label>
+        <input type="text" id="stock-code" placeholder="Enter stock code">
+        
+        <label for="date-from">Date From:</label>
+        <input type="date" id="date-from">
+        
+        <label for="date-to">Date To:</label>
+        <input type="date" id="date-to">
+
+        <label for="metrics">Select Metrics:</label>
+        <select id="metrics" multiple>
+            <option value="open">Open</option>
+            <option value="close">Close</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+            <option value="volume">Volume</option>
+        </select>
+
+        <button id="fetch-data">Fetch Data</button>
+
+        <canvas id="stockChart"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
